@@ -1,0 +1,40 @@
+// test.js
+
+process.env.PORT = 3001; // Use a different port
+
+const { Builder, By, until } = require('selenium-webdriver');
+
+const chrome = require('selenium-webdriver/chrome');
+
+const assert = require('assert');
+
+const app = require('./app'); // This will start the server on port 3001
+
+(async function example() {
+
+let driver = await new Builder().forBrowser('chrome').build();
+try {
+
+await driver.get('http://localhost:3001');
+
+const element = await driver.wait(until.elementLocated(By.tagName('h1')), 10000);
+
+const text = await element.getText();
+
+assert.strictEqual(text, 'Hello, World!');
+
+console.log('Test passed: Page contains "Hello, World!"');
+
+} catch (error) {
+
+console.error('Test failed:', error);
+
+} finally {
+
+await driver.quit();
+
+process.exit();
+
+}
+
+})();
